@@ -2,10 +2,14 @@ import Config
 
 # Configure your database
 config :live_trades, LiveTrades.Repo,
-  database: Path.expand("../live_trades_dev.db", __DIR__),
-  pool_size: 5,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "live_trades",
   stacktrace: true,
-  show_sensitive_data_on_connection_error: true
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10,
+  port: 5432
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
