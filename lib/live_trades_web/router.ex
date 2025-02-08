@@ -10,14 +10,10 @@ defmodule LiveTradesWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  # pipeline :api do
-  #   plug :accepts, ["json"]
-  # end
-
   scope "/", LiveTradesWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", ThermostatLive
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
