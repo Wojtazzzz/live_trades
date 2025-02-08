@@ -4,6 +4,7 @@ defmodule LiveTrades.Tradings do
   """
 
   import Ecto.Query, warn: false
+  alias LiveTrades.Tradings.Statistic
   alias LiveTrades.TradingClient
   alias LiveTrades.Repo
 
@@ -36,6 +37,26 @@ defmodule LiveTrades.Tradings do
   """
   def get_company_by_code(code) do
     Company |> Ecto.Query.where(code: ^code) |> Repo.one()
+  end
+
+  def get_company_with_data(company_id) do
+    company =
+      Repo.one(
+        from c in Company,
+          where: c.id == ^company_id,
+          preload: [
+            statistics:
+              ^from(s in Statistic,
+                order_by: [desc: s.inserted_at],
+                limit: 10
+              )
+          ]
+      )
+
+    case company do
+      nil -> nil
+      company -> company
+    end
   end
 
   @doc """
