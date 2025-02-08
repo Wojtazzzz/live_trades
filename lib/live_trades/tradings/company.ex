@@ -6,6 +6,8 @@ defmodule LiveTrades.Tradings.Company do
     field :code, :string
     field :name, :string
 
+    has_many :statistics, LiveTrades.Tradings.Statistic
+
     timestamps(type: :utc_datetime)
   end
 
