@@ -1,5 +1,5 @@
 defmodule LiveTrades.TradingClient do
-  def fetch_ticker_data_by_code(code) do
+  def fetch_company_data_by_code(code) do
     with {:ok, %HTTPoison.Response{status_code: 200, body: body}} <-
            HTTPoison.get(
              "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=#{String.upcase(code)}&apikey=0UK6V2NVUXRJ1JDX"

@@ -13,7 +13,7 @@ defmodule LiveTradesWeb.Router do
   scope "/", LiveTradesWeb do
     pipe_through :browser
 
-    live "/", ThermostatLive
+    live "/", CompanyStatusLive
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
