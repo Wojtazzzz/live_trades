@@ -13,9 +13,7 @@ defmodule LiveTradesWeb.CompanyStatusLive do
 
   def mount(_params, _session, socket) do
     company = Tradings.get_company_by_code("aapl")
-    data = Tradings.get_company_current_data(company.code)
-
-    IO.inspect(data)
+    # data = Tradings.get_company_current_data(company.code)
 
     temperature = 70
     {:ok, assign(socket, temperature: temperature, company: company)}
