@@ -6,7 +6,7 @@ defmodule LiveTradesWeb.Components.Chart do
 
   attr :id, :string, required: true
   attr :type, :string, default: "line"
-  attr :width, :integer, default: nil
+  attr :width, :string, default: nil
   attr :height, :integer, default: nil
   attr :toolbar, :boolean, default: false
   attr :animations, :map, default: false

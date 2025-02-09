@@ -7,14 +7,14 @@ defmodule LiveTradesWeb.CompanyStatusLive do
 
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="w-full">
       <div>{@company.name}</div>
       <div>{List.first(@company.statistics, %{price: 0}).price} USD</div>
 
       <.line_graph
         id="chart"
         height={420}
-        width={640}
+        width="100%"
         dataset={[
           %{
             name: "",
