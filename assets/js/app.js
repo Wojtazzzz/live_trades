@@ -39,6 +39,7 @@ Hooks.Chart = {
 const csrfToken = document
 	.querySelector("meta[name='csrf-token']")
 	.getAttribute("content");
+
 const liveSocket = new LiveSocket("/live", Socket, {
 	longPollFallbackMs: 2500,
 	params: { _csrf_token: csrfToken },
@@ -66,5 +67,10 @@ window.addEventListener("phx:new_data", (e) => {
 		return;
 	}
 
-	chart.updateSeries(data.dataset);
+	chart.updateOptions({
+		xaxis: {
+			categories: data.categories,
+		},
+		series: data.dataset,
+	});
 });

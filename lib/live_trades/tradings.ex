@@ -151,12 +151,12 @@ defmodule LiveTrades.Tradings do
   end
 
   defp update_company_statistics(%Company{} = company) do
-    company_data = TradingClient.fetch_company_data_by_code(company.code)
+    company_price = TradingClient.fetch_company_data_by_code(company.code)
 
-    with true <- Map.has_key?(company_data, :price) do
+    with {price, ""} <- Float.parse(company_price) do
       company
       |> Ecto.build_assoc(:statistics)
-      |> Ecto.Changeset.cast(%{price: company_data.price}, [:price])
+      |> Ecto.Changeset.cast(%{price: price}, [:price])
       |> Repo.insert()
     else
       _ -> {:error}

@@ -3,7 +3,7 @@ defmodule LiveTradesWeb.CompanyStatusLive do
   use LiveTradesWeb, :live_view
   import LiveTradesWeb.Components.Chart
 
-  @refresh_time 10_000
+  @refresh_time 1_000 * 60 * 3
 
   def render(assigns) do
     ~H"""
