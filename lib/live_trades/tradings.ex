@@ -131,4 +131,35 @@ defmodule LiveTrades.Tradings do
       company -> TradingClient.fetch_company_data_by_code(company.code)
     end
   end
+
+  @doc """
+  Updates statistics of 5 companies.
+
+  ## Examples
+    iex> update_next_companies()
+    []
+  """
+  def update_next_companies() do
+    companies =
+      Repo.all(
+        from c in Company,
+          order_by: [asc_nulls_first: c.statistics_updated_at],
+          limit: 5
+      )
+
+    for company <- companies, do: update_company_statistics(company)
+  end
+
+  defp update_company_statistics(%Company{} = company) do
+    company_data = TradingClient.fetch_company_data_by_code(company.code)
+
+    with true <- Map.has_key?(company_data, :price) do
+      company
+      |> Ecto.build_assoc(:statistics)
+      |> Ecto.Changeset.cast(%{price: company_data.price}, [:price])
+      |> Repo.insert()
+    else
+      _ -> {:error}
+    end
+  end
 end
