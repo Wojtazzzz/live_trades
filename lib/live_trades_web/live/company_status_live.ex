@@ -7,9 +7,13 @@ defmodule LiveTradesWeb.CompanyStatusLive do
 
   def render(assigns) do
     ~H"""
-    <div class="w-full">
-      <div>{@company.name}</div>
-      <div>{List.first(@company.statistics, %{price: 0}).price} USD</div>
+    <div class="w-full bg-white p-8 rounded-xl shadow">
+      <hgroup class="space-y-3 mb-3">
+        <h1 class="text-3xl text-[#05004E] font-semibold">{@company.name}</h1>
+        <p class="text-xl font-medium">
+          {List.first(@company.statistics, %{price: 0}).price} USD
+        </p>
+      </hgroup>
 
       <.line_graph
         id="chart"
