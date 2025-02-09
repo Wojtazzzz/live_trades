@@ -50,7 +50,13 @@ defmodule LiveTradesWeb.CompanyStatusLive do
     company = Tradings.get_company_with_data(1)
     reversed_stats = Enum.reverse(company.statistics)
 
-    {:ok, assign(socket, company: company, reversed_stats: reversed_stats)}
+    {:ok,
+     assign(
+       socket,
+       page_title: company.name,
+       company: company,
+       reversed_stats: reversed_stats
+     )}
   end
 
   def handle_info(:new_data, socket) do
