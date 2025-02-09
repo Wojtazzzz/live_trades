@@ -71,18 +71,25 @@ defmodule LiveTradesWeb.CompanyStatusLive do
     reversed_stats = Enum.reverse(company.statistics)
 
     {:noreply,
-     push_event(socket, "new_data", %{
-       dataset: [
-         %{
-           name: "",
-           data:
-             reversed_stats
-             |> Enum.map(& &1.price)
-         }
-       ],
-       categories:
-         reversed_stats
-         |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
-     })}
+     push_event(
+       assign(
+         socket,
+         company: company
+       ),
+       "new_data",
+       %{
+         dataset: [
+           %{
+             name: "",
+             data:
+               reversed_stats
+               |> Enum.map(& &1.price)
+           }
+         ],
+         categories:
+           reversed_stats
+           |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
+       }
+     )}
   end
 end
