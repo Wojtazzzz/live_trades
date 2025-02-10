@@ -124,14 +124,6 @@ defmodule LiveTrades.Tradings do
     Company.changeset(company, attrs)
   end
 
-  def get_company_current_data(code) do
-    get_company_by_code(code)
-    |> case do
-      nil -> nil
-      company -> TradingClient.fetch_company_data_by_code(company.code)
-    end
-  end
-
   @doc """
   Updates statistics of 5 companies.
 
