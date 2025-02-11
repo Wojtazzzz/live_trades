@@ -10,7 +10,7 @@ defmodule LiveTradesWeb.CompanyStatusLive do
   def render(assigns) do
     ~H"""
     <div class="space-y-5">
-      <div class="flex gap-5">
+      <div class="flex flex-col sm:flex-row gap-5">
         <%= for company <- @companies do %>
           <.link patch={~p"/#{company.id}"} class="w-full">
             <.tile name={company.name} code={company.code} price={company.name} />
@@ -26,35 +26,37 @@ defmodule LiveTradesWeb.CompanyStatusLive do
           </p>
         </hgroup>
 
-        <.line_graph
-          id="chart"
-          height={420}
-          width="100%"
-          dataset={[
-            %{
-              name: "",
-              data: @reversed_stats |> Enum.map(& &1.price)
+        <div class="min-h-[420px]">
+          <.line_graph
+            id="chart"
+            height={420}
+            width="100%"
+            dataset={[
+              %{
+                name: "",
+                data: @reversed_stats |> Enum.map(& &1.price)
+              }
+            ]}
+            categories={
+              @reversed_stats
+              |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
             }
-          ]}
-          categories={
-            @reversed_stats
-            |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
-          }
-          animations={
-            %{
-              enabled: true,
-              speed: 800,
-              animateGradually: %{
+            animations={
+              %{
                 enabled: true,
-                delay: 150
-              },
-              dynamicAnimation: %{
-                enabled: true,
-                speed: 350
+                speed: 800,
+                animateGradually: %{
+                  enabled: true,
+                  delay: 150
+                },
+                dynamicAnimation: %{
+                  enabled: true,
+                  speed: 350
+                }
               }
             }
-          }
-        />
+          />
+        </div>
       </div>
     </div>
     """
