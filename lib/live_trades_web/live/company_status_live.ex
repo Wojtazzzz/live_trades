@@ -12,7 +12,7 @@ defmodule LiveTradesWeb.CompanyStatusLive do
     <div class="space-y-5">
       <div class="flex gap-5">
         <%= for company <- @companies do %>
-          <.link patch={~p"/#{company.id}"} class="block">
+          <.link patch={~p"/#{company.id}"} class="w-full">
             <.tile name={company.name} code={company.code} price={company.name} />
           </.link>
         <% end %>
