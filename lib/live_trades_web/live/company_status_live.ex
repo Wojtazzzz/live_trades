@@ -34,13 +34,10 @@ defmodule LiveTradesWeb.CompanyStatusLive do
             dataset={[
               %{
                 name: "",
-                data: @reversed_stats |> Enum.map(& &1.price)
+                data: @dataset
               }
             ]}
-            categories={
-              @reversed_stats
-              |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
-            }
+            categories={@categories}
             animations={
               %{
                 enabled: true,
@@ -65,8 +62,12 @@ defmodule LiveTradesWeb.CompanyStatusLive do
   def mount(%{"id" => company_id}, _session, socket) do
     Process.send_after(self(), :new_data, @refresh_time)
 
-    company = Tradings.get_company_with_data(company_id)
-    reversed_stats = Enum.reverse(company.statistics)
+    %{
+      company: company,
+      dataset: dataset,
+      categories: categories
+    } = get_company_data(company_id)
+
     companies = Tradings.list_companies()
 
     {:ok,
@@ -75,16 +76,19 @@ defmodule LiveTradesWeb.CompanyStatusLive do
        page_title: company.name,
        company: company,
        companies: companies,
-       reversed_stats: reversed_stats
+       categories: categories,
+       dataset: dataset
      )}
   end
 
   def handle_info(:new_data, socket) do
     Process.send_after(self(), :new_data, @refresh_time)
 
-    # push only new data instead of whole bunch after migrating to premium API
-    company = Tradings.get_company_with_data(socket.assigns.company.id)
-    reversed_stats = Enum.reverse(company.statistics)
+    %{
+      company: company,
+      dataset: dataset,
+      categories: categories
+    } = get_company_data(socket.assigns.company.id)
 
     {:noreply,
      push_event(
@@ -97,28 +101,59 @@ defmodule LiveTradesWeb.CompanyStatusLive do
          dataset: [
            %{
              name: "",
-             data:
-               reversed_stats
-               |> Enum.map(& &1.price)
+             data: dataset
            }
          ],
-         categories:
-           reversed_stats
-           |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
+         categories: categories
        }
      )}
   end
 
   def handle_params(%{"id" => company_id}, _uri, socket) do
+    %{
+      company: company,
+      dataset: dataset,
+      categories: categories
+    } = get_company_data(company_id)
+
+    {:noreply,
+     push_event(
+       assign(
+         socket,
+         page_title: company.name,
+         company: company,
+         categories: categories,
+         dataset: dataset
+       ),
+       "new_data",
+       %{
+         dataset: [
+           %{
+             name: "",
+             data: dataset
+           }
+         ],
+         categories: categories
+       }
+     )}
+  end
+
+  defp get_company_data(company_id) do
     company = Tradings.get_company_with_data(company_id)
     reversed_stats = Enum.reverse(company.statistics)
 
-    {:noreply,
-     assign(
-       socket,
-       page_title: company.name,
-       company: company,
-       reversed_stats: reversed_stats
-     )}
+    dataset =
+      reversed_stats
+      |> Enum.map(& &1.price)
+
+    categories =
+      reversed_stats
+      |> Enum.map(&Calendar.strftime(&1.inserted_at, "%H:%M"))
+
+    %{
+      company: company,
+      dataset: dataset,
+      categories: categories
+    }
   end
 end
