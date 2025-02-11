@@ -18,7 +18,7 @@ defmodule LiveTradesWeb.Router do
   scope "/", LiveTradesWeb do
     pipe_through :browser
 
-    live "/", CompanyStatusLive
+    live "/:id", CompanyStatusLive
   end
 
   scope "/api", LiveTradesWeb do
